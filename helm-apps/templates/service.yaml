@@ -1,9 +1,23 @@
+# Active Service (운영 트래픽용)
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "helm-apps.fullname" . }}
-  labels:
-    {{- include "helm-apps.labels" . | nindent 4 }}
+  name: {{ include "helm-apps.fullname" . }}-active
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "helm-apps.selectorLabels" . | nindent 4 }}
+---
+# Preview Service (테스트/검증용)
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helm-apps.fullname" . }}-preview
 spec:
   type: {{ .Values.service.type }}
   ports:

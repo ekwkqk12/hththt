@@ -74,10 +74,28 @@ ingress:
     alb.ingress.kubernetes.io/backend-protocol: "HTTP"
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:011040483023:certificate/ce40020d-442b-4c3a-8b09-baaa64e47bdb
   hosts:
-    - host: 1714-test.ti.refinedev.io
-      paths:
-        - path: /
-          pathType: Prefix
+    - host: 1714-it.refinedev.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "helm-apps.fullname" . }}-active # Active 서비스 연결
+                port:
+                  number: 5000
+    # 2. 테스트용 도메인 (Preview)
+    - host: 1714-it-preview.refinedev.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "helm-apps.fullname" . }}-preview # Preview 서비스 연결
+                port:
+                  number: 5000
+
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
