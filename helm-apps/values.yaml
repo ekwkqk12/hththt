@@ -76,10 +76,9 @@ ingress:
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:011040483023:certificate/ce40020d-442b-4c3a-8b09-baaa64e47bdb
   hosts:
     - host: 1714-it.refinedev.io
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
+      paths:
+        - path: /
+          pathType: Prefix
 
   tls: []
   #  - secretName: chart-example-tls
