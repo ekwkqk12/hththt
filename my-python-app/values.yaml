@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: ekwkqk12/app1
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: "66d4a7a"
 
 service:
   type: ClusterIP
