@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "helm-apps.fullname" . }}
+  name: {{ include "helm-apps.fullname" . | quote }}
   labels:
     {{- include "helm-apps.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -10,44 +10,42 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- with .Values.ingress.className }}
-  ingressClassName: {{ . }}
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className | quote }}
   {{- end }}
   rules:
     {{- range .Values.ingress.hosts }}
     {{- $originalHost := .host -}}
     
-    # 1. 운영(Active) 규칙 생성
+    # 1. 운영(Active) 규칙
     - host: {{ $originalHost | quote }}
       http:
         paths:
           {{- range .paths }}
-          - path: {{ .path }}
-            pathType: {{ .pathType | default "Prefix" }}
+          - path: {{ .path | quote }}
+            pathType: {{ .pathType | default "Prefix" | quote }}
             backend:
               service:
-                # 헬름 함수 결과를 명시적으로 문자열로 합치고 따옴표로 감쌉니다.
                 name: {{ printf "%s-active" (include "helm-apps.fullname" $) | quote }}
                 port:
-                  number: {{ $.Values.service.port }}
+                  number: {{ $.Values.service.port | default 80 }}
           {{- end }}
 
-    # 2. Preview 규칙 조건부 자동 생성
+    # 2. Preview 규칙 자동 생성 (조건부)
     {{- if $.Values.ingress.autoPreview }}
     {{- $hostParts := splitList "." $originalHost -}}
-    {{- /* 도메인이 1714-test.it.io 면 1714-test-preview.it.io 로 변환 */ -}}
     {{- $previewHost := printf "%s-preview.%s" (index $hostParts 0) (join "." (rest $hostParts)) -}}
     - host: {{ $previewHost | quote }}
       http:
         paths:
           {{- range .paths }}
-          - path: {{ .path }}
-            pathType: {{ .pathType | default "Prefix" }}
+          - path: {{ .path | quote }}
+            pathType: {{ .pathType | default "Prefix" | quote }}
             backend:
               service:
                 name: {{ printf "%s-preview" (include "helm-apps.fullname" $) | quote }}
                 port:
-                  number: {{ $.Values.service.port }}
+                  number: {{ $.Values.service.port | default 80 }}
           {{- end }}
     {{- end }}
     
