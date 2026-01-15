@@ -15,9 +15,7 @@ spec:
   {{- end }}
   rules:
     {{- range .Values.ingress.hosts }}
-    {{- $originalHost := .host -}}
-    
-    # 1. 운영(Active) 규칙
+    {{- $originalHost := .host }}
     - host: {{ $originalHost | quote }}
       http:
         paths:
@@ -30,12 +28,9 @@ spec:
                 port:
                   number: {{ $.Values.service.port | default 80 }}
           {{- end }}
-
     {{- if $.Values.ingress.autoPreview }}
-    {{- $hostParts := splitList "." $originalHost -}}
-    {{- $previewHost := printf "%s-preview.%s" (index $hostParts 0) (join "." (rest $hostParts)) -}}
-    
-    # 2. Preview 규칙 자동 생성 (조건부)
+    {{- $hostParts := splitList "." $originalHost }}
+    {{- $previewHost := printf "%s-preview.%s" (index $hostParts 0) (join "." (rest $hostParts)) }}
     - host: {{ $previewHost | quote }}
       http:
         paths:
