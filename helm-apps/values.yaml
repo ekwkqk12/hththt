@@ -59,6 +59,7 @@ service:
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: true
+  autoPreview: true
   className: "alb"
   annotations:
     alb.ingress.kubernetes.io/load-balancer-name: test-external-ingress
@@ -79,22 +80,6 @@ ingress:
         paths:
           - path: /
             pathType: Prefix
-            backend:
-              service:
-                name: {{ include "helm-apps.fullname" . }}-active # Active 서비스 연결
-                port:
-                  number: 5000
-    # 2. 테스트용 도메인 (Preview)
-    - host: 1714-it-preview.refinedev.io
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ include "helm-apps.fullname" . }}-preview # Preview 서비스 연결
-                port:
-                  number: 5000
 
   tls: []
   #  - secretName: chart-example-tls
