@@ -31,10 +31,11 @@ spec:
                   number: {{ $.Values.service.port | default 80 }}
           {{- end }}
 
-    # 2. Preview 규칙 자동 생성 (조건부)
     {{- if $.Values.ingress.autoPreview }}
     {{- $hostParts := splitList "." $originalHost -}}
     {{- $previewHost := printf "%s-preview.%s" (index $hostParts 0) (join "." (rest $hostParts)) -}}
+    
+    # 2. Preview 규칙 자동 생성 (조건부)
     - host: {{ $previewHost | quote }}
       http:
         paths:
@@ -48,6 +49,5 @@ spec:
                   number: {{ $.Values.service.port | default 80 }}
           {{- end }}
     {{- end }}
-    
     {{- end }}
 {{- end }}
