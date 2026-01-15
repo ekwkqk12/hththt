@@ -60,14 +60,24 @@ service:
 ingress:
   enabled: true
   className: "alb"
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: test-external-ingress
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/group.name: test-external
+    alb.ingress.kubernetes.io/group.order: "3"
+    alb.ingress.kubernetes.io/subnets	: subnet-2c2d2b45, subnet-397e8042, subnet-ebdea1a6
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443},{"HTTP":80}]'
+    alb.ingress.kubernetes.io/load-balancer-attributes: "idle_timeout.timeout_seconds=300"
+    alb.ingress.kubernetes.io/ssl-policy: "ELBSecurityPolicy-FS-1-2-Res-2020-10"
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/target-type: "ip"
+    alb.ingress.kubernetes.io/backend-protocol: "HTTP"
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:011040483023:certificate/ce40020d-442b-4c3a-8b09-baaa64e47bdb
   hosts:
-    - host: 1714-it.refinedev.io
+    - host: 1714-it-test.refinedev.io
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
