@@ -1,4 +1,5 @@
-FROM python:3.9-slim
+ARG TARGETPLATFORM
+FROM --platform=$TARGETPLATFORM python:3.9-slim
 
 WORKDIR /app
 
