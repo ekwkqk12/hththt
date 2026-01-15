@@ -74,7 +74,7 @@ ingress:
     alb.ingress.kubernetes.io/backend-protocol: "HTTP"
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:011040483023:certificate/ce40020d-442b-4c3a-8b09-baaa64e47bdb
   hosts:
-    - host: 1714-it-test.refinedev.io
+    - host: 1714-test.ti.refinedev.io
       paths:
         - path: /
           pathType: Prefix
